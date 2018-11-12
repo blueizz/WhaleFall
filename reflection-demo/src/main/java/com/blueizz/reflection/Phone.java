@@ -8,18 +8,18 @@ import android.util.Log;
 
 public class Phone {
 
-    private String model;
+    private String model = "iPhone";
 
-    private float screenSize;
+    private float screenSize = 5.5f;
 
-    public boolean isFullscreen;
+    public boolean isFullscreen = false;
 
-    public void call(){
-        Log.i("Phone","call");
+    public void call() {
+        Log.i("Phone", "call");
     }
 
-    private void fingerUnlock(){
-        Log.i("Phone","fingerUnlock");
+    private void fingerUnlock() {
+        Log.i("Phone", "fingerUnlock");
     }
 
 }

@@ -1,1 +1,7 @@
-<manifest package="com.blueizz.reflection" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.blueizz.reflection">
+
+    <application>
+        <activity android:name=".ReflectionActivity" />
+    </application>
+</manifest>
