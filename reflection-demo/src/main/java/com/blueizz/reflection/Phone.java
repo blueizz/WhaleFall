@@ -14,8 +14,17 @@ public class Phone {
 
     public boolean isFullscreen = false;
 
-    public void call() {
-        Log.i("Phone", "call");
+    public Phone() {
+    }
+
+    public Phone(String model, float screenSize, boolean isFullscreen) {
+        this.model = model;
+        this.screenSize = screenSize;
+        this.isFullscreen = isFullscreen;
+    }
+
+    public void call(String phoneNum) {
+        Log.i("Phone", "call：" + phoneNum);
     }
 
     private void fingerUnlock() {
