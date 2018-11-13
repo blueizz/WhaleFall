@@ -64,7 +64,7 @@ public class ReflectionActivity extends Activity {
                 Log.i(TAG, "Method Name：" + method.getName());
             }
 
-            Method[] declaredMethods = cls.getMethods();
+            Method[] declaredMethods = cls.getDeclaredMethods();
             for (Method method : declaredMethods) {
                 method.setAccessible(true);
                 Log.i(TAG, "Method Name：" + method.getName());
