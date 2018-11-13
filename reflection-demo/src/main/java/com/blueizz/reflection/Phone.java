@@ -8,11 +8,11 @@ import android.util.Log;
 
 public class Phone {
 
-    private String model = "iPhone";
+    private String model;
 
-    private float screenSize = 5.5f;
+    private float screenSize;
 
-    public boolean isFullscreen = false;
+    public boolean isFullscreen;
 
     public Phone() {
     }

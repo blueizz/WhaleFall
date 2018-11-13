@@ -28,7 +28,8 @@ public class ReflectionActivity extends Activity {
             Class cls = Phone.class;
             Constructor constructor = cls.getConstructor(String.class,
                     float.class, boolean.class);
-            Phone phone = (Phone) constructor.newInstance("android", 5.1f, false);
+            Phone phone = (Phone) constructor.newInstance("android",
+                    5.5f, false);
 
             Field publicField = cls.getField("isFullscreen");
             boolean isFullscreen = publicField.getBoolean(phone);
