@@ -53,13 +53,16 @@ public class ReflectionActivity extends Activity {
                 Log.i(TAG, field.getName() + ":" + field.get(phone));
             }
 
+            /**
+             * Method对象常用方法
+             */
             //获取public String call(String phoneNum)方法的Method对象
             Method callMethod = cls.getMethod("call", String.class);
-            callMethod.invoke(phone, "110");
             Log.i(TAG, "修饰符：" + Modifier.toString(callMethod.getModifiers()));
             Log.i(TAG, "返回值类型：" + callMethod.getReturnType());
             Log.i(TAG, "方法名称：" + callMethod.getName());
             Log.i(TAG, "参数类型列表(数组)：" + callMethod.getParameterTypes());
+            //使用Method.invoke()调用方法
             String result = (String) callMethod.invoke(phone, "110");
             Log.i(TAG, "调用call后的运行结果：" + result);
 
