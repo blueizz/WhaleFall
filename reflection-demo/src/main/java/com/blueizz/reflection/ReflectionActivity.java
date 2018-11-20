@@ -2,10 +2,8 @@ package com.blueizz.reflection;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
@@ -32,6 +30,9 @@ public class ReflectionActivity extends Activity {
             //使用Phone类的class对象生成实例
             Phone phone = (Phone) constructor.newInstance("android", 5.5f);
 
+            /**
+             * 获取Field对象
+             */
             Field publicField = cls.getField("screenSize");
             float size = publicField.getFloat(phone);
             Log.i(TAG, "屏幕尺寸:" + size);
@@ -78,7 +79,7 @@ public class ReflectionActivity extends Activity {
             Method[] declaredMethods = cls.getDeclaredMethods();
             for (Method method : declaredMethods) {
                 method.setAccessible(true);
-                Log.i(TAG, "Method Name：" + method.getName());
+                Log.i(TAG, "所有方法：" + method.getName());
             }
         } catch (Exception e) {
             e.printStackTrace();
