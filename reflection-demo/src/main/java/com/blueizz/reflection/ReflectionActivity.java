@@ -11,6 +11,7 @@ import android.util.Log;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * Created by blueizz on 2018/11/11.
@@ -19,24 +20,24 @@ import java.lang.reflect.Method;
 public class ReflectionActivity extends Activity {
     private final static String TAG = "ReflectionActivity";
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
+            //使用反射第一步:获取操作类Phone所对应的Class对象
             Class cls = Phone.class;
             Constructor constructor = cls.getConstructor(String.class,
-                    float.class, boolean.class);
-            Phone phone = (Phone) constructor.newInstance("android",
-                    5.5f, false);
+                    float.class);
+            //使用Phone类的class对象生成实例
+            Phone phone = (Phone) constructor.newInstance("android", 5.5f);
 
-            Field publicField = cls.getField("isFullscreen");
-            boolean isFullscreen = publicField.getBoolean(phone);
-            Log.i(TAG, "isFullscreen:" + isFullscreen);
+            Field publicField = cls.getField("screenSize");
+            float size = publicField.getFloat(phone);
+            Log.i(TAG, "screenSize:" + size);
 
-            Field declaredField = cls.getDeclaredField("model");
-            //获取私有属性的访问权限，抑制Java对其的检查。
+            Field declaredField = cls.getDeclaredField("platform");
+            //获取私有属性的访问权限
             declaredField.setAccessible(true);
             String model = (String) declaredField.get(phone);
             Log.i(TAG, "model:" + model);
@@ -52,8 +53,15 @@ public class ReflectionActivity extends Activity {
                 Log.i(TAG, field.getName() + ":" + field.get(phone));
             }
 
-            Method publicMethod = cls.getMethod("call", String.class);
-            publicMethod.invoke(phone, "15800001111");
+            //获取public String call(String phoneNum)方法的Method对象
+            Method callMethod = cls.getMethod("call", String.class);
+            callMethod.invoke(phone, "110");
+            Log.i(TAG, "修饰符：" + Modifier.toString(callMethod.getModifiers()));
+            Log.i(TAG, "返回值类型：" + callMethod.getReturnType());
+            Log.i(TAG, "方法名称：" + callMethod.getName());
+            Log.i(TAG, "参数类型列表(数组)：" + callMethod.getParameterTypes());
+            String result = (String) callMethod.invoke(phone, "110");
+            Log.i(TAG, "调用call后的运行结果：" + result);
 
             Method declaredMethod = cls.getDeclaredMethod("fingerUnlock");
             declaredMethod.setAccessible(true);
@@ -61,7 +69,7 @@ public class ReflectionActivity extends Activity {
 
             Method[] methods = cls.getMethods();
             for (Method method : methods) {
-                Log.i(TAG, "Method Name：" + method.getName());
+                Log.i(TAG, "public方法：" + method.getName());
             }
 
             Method[] declaredMethods = cls.getDeclaredMethods();
