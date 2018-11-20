@@ -34,13 +34,13 @@ public class ReflectionActivity extends Activity {
 
             Field publicField = cls.getField("screenSize");
             float size = publicField.getFloat(phone);
-            Log.i(TAG, "screenSize:" + size);
+            Log.i(TAG, "屏幕尺寸:" + size);
 
             Field declaredField = cls.getDeclaredField("platform");
             //获取私有属性的访问权限
             declaredField.setAccessible(true);
             String model = (String) declaredField.get(phone);
-            Log.i(TAG, "model:" + model);
+            Log.i(TAG, "平台:" + model);
 
             Field[] fields = cls.getFields();
             for (Field field : fields) {
@@ -66,7 +66,7 @@ public class ReflectionActivity extends Activity {
             String result = (String) callMethod.invoke(phone, "110");
             Log.i(TAG, "调用call后的运行结果：" + result);
 
-            Method declaredMethod = cls.getDeclaredMethod("fingerUnlock");
+            Method declaredMethod = cls.getDeclaredMethod("unlock");
             declaredMethod.setAccessible(true);
             declaredMethod.invoke(phone);
 
