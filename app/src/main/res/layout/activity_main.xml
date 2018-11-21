@@ -3,10 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_reflection"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_main"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Reflection" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

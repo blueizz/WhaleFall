@@ -86,8 +86,4 @@ public class ReflectionActivity extends Activity {
         }
     }
 
-    public static void gotoReflectionDemo(Activity activity) {
-        Intent intent = new Intent(activity, ReflectionActivity.class);
-        activity.startActivity(intent);
-    }
 }
