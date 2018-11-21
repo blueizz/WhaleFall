@@ -11,7 +11,7 @@ import com.blueizz.whalefall.R;
 
 import java.util.List;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements View.OnClickListener {
     private Context mContext;
     private List<String> mData;
     private OnItemClickListener mOnItemClickListener;
@@ -29,25 +29,27 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_main, parent, false);
         ViewHolder holder = new ViewHolder(view);
+        view.setOnClickListener(this);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.activityName.setText(mData.get(position));
-        holder.activityName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnItemClickListener != null) {
-                    mOnItemClickListener.onItemClick(mData.get(position));
-                }
-            }
-        });
+        //将数据保存在itemView的Tag中，以便点击时进行获取
+        holder.itemView.setTag(mData.get(position));
     }
 
     @Override
     public int getItemCount() {
         return mData == null ? 0 : mData.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (mOnItemClickListener != null) {
+            mOnItemClickListener.onItemClick((String) v.getTag());
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener l) {
