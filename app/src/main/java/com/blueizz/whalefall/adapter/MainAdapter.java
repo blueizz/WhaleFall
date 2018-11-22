@@ -36,7 +36,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.activityName.setText(mData.get(position));
-        //将数据保存在itemView的Tag中，以便点击时进行获取
+        //将数据保存在itemView的Tag中，以便点击时获取
         holder.itemView.setTag(mData.get(position));
     }
 

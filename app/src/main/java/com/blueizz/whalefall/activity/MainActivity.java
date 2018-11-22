@@ -37,11 +37,18 @@ public class MainActivity extends Activity implements IMainView {
         mRecyclerView = findViewById(R.id.rv_main);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayout.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
-        //Item的高度是固定的，设置这个选项可以提高性能。总得来说就是就是避免整个布局绘制，就是避免requestLayout
+        /**
+         * Item的高度是固定的，设置这个选项可以提高性能。
+         * 总得来说就是就是避免整个布局绘制，就是避免requestLayout
+         */
         mRecyclerView.setHasFixedSize(true);
         mAdapter = new MainAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
+        setListener();
+    }
+
+    private void setListener() {
         mAdapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String activityName) {
@@ -53,12 +60,18 @@ public class MainActivity extends Activity implements IMainView {
     }
 
     private void initPresenter() {
-        mPresenter = new MainPresenter(this);
+        mPresenter = new MainPresenter(this, this);
         mPresenter.getData();
     }
 
     @Override
     public void updateData(List<String> data) {
         mAdapter.setData(data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 }
