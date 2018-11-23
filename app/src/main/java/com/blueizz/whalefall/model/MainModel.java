@@ -7,6 +7,7 @@ import android.os.Message;
 import com.blueizz.whalefall.ActivityRouter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,10 +22,11 @@ public class MainModel {
     public void getData() {
         List<String> data = new ArrayList<>();
         Map<String, Class<? extends Activity>> activityMap = ActivityRouter.getActivityMap();
-        for (String key : activityMap.keySet()) {
-            data.add(key);
+        for (Map.Entry<String, Class<? extends Activity>> entry : activityMap.entrySet()) {
+            data.add(entry.getKey());
         }
-
+        //反转List
+        Collections.reverse(data);
         Message msg = mHandler.obtainMessage(SUCCESS_GET_DATA);
         msg.obj = data;
         mHandler.sendMessage(msg);
