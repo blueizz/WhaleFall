@@ -1,2 +1,2 @@
-include ':app', ':annotation-demo'
+include ':app', ':annotation-demo', ':common'
 include ':reflection-demo'
