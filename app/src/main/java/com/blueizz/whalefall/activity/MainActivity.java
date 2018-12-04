@@ -7,11 +7,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.blueizz.reflection.ReflectionActivity;
 import com.blueizz.whalefall.ActivityRouter;
 import com.blueizz.whalefall.R;
 import com.blueizz.whalefall.adapter.MainAdapter;

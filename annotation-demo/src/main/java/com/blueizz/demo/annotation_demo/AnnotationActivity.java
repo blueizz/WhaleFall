@@ -14,10 +14,10 @@ public class AnnotationActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        init();
+        checkMethod();
     }
 
-    private void init() {
+    private void checkMethod() {
         NoBug noBug = new NoBug();
         Class cls = noBug.getClass();
         for (Method method : cls.getMethods()) {
@@ -27,7 +27,7 @@ public class AnnotationActivity extends Activity {
                     method.invoke(noBug, null);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.i(TAG, method.getName());
+                    Log.i(TAG, "Error：" + method.getName());
                 }
             }
         }
