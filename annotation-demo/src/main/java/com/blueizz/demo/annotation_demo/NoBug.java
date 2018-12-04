@@ -15,12 +15,12 @@ public class NoBug {
         Log.i(TAG, "1-1 = " + (1 - 1));
     }
 
-    @CheckAnnotation
+    @CheckAnnotation(isCheck = true)
     public void multiplication() {
         Log.i(TAG, "1×1 = " + (1 * 1));
     }
 
-    @CheckAnnotation
+    @CheckAnnotation(isCheck = true)
     public void division() {
         Log.i(TAG, "8÷0 = " + (8 / 0));
     }

@@ -23,11 +23,16 @@ public class AnnotationActivity extends Activity {
         for (Method method : cls.getMethods()) {
             //判断是否标注了CheckAnnotation注解
             if (method.isAnnotationPresent(CheckAnnotation.class)) {
-                try {
-                    method.invoke(noBug, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i(TAG, "Error：" + method.getName());
+                //获取当前方法的注解对象
+                CheckAnnotation checkAnnotation = method.getAnnotation(CheckAnnotation.class);
+                //通过注解的isCheck属性判断是否测试当前方法
+                if (checkAnnotation.isCheck()) {
+                    try {
+                        method.invoke(noBug, null);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i(TAG, "Error：" + method.getName());
+                    }
                 }
             }
         }
