@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.blueizz.demo.annotation_demo">
+    package="com.blueizz.annotation">
 
     <application>
         <activity android:name=".AnnotationActivity" />

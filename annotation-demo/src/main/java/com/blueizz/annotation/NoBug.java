@@ -1,4 +1,4 @@
-package com.blueizz.demo.annotation_demo;
+package com.blueizz.annotation;
 
 import android.util.Log;
 

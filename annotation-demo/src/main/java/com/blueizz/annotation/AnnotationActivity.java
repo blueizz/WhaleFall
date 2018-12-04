@@ -1,9 +1,12 @@
-package com.blueizz.demo.annotation_demo;
+package com.blueizz.annotation;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.blueizz.annotation.CheckAnnotation;
+import com.blueizz.annotation.NoBug;
 
 import java.lang.reflect.Method;
 
