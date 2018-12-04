@@ -1,7 +1,8 @@
-package com.blueizz.whalefall;
+package com.blueizz.commom.mvp;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 
 import java.lang.ref.WeakReference;
@@ -20,6 +21,11 @@ public class SafeHandler extends Handler {
         this.mActivity = new WeakReference<>(context);
     }
 
+    public SafeHandler(Looper looper, Callback callback) {
+        super(looper, callback);
+        this.isAlive = true;
+    }
+
     @Override
     public void dispatchMessage(Message msg) {
         if (this.isAlive) {
@@ -30,10 +36,20 @@ public class SafeHandler extends Handler {
                     super.dispatchMessage(msg);
                 }
             }
+            this.clearMsg(msg);
         }
     }
 
-    public void onDestroy() {
+    public void clearMsg(Message msg) {
+        msg.what = 0;
+        msg.arg1 = 0;
+        msg.arg2 = 0;
+        msg.obj = null;
+        msg.replyTo = null;
+        msg.setTarget(null);
+    }
+
+    public void destroy() {
         isAlive = false;
     }
 }
