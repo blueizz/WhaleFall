@@ -1,8 +1,5 @@
 package com.blueizz.commom.mvp.bean;
 
-/**
- * Created by mikeshou on 15/6/18.
- */
 public class Result {
 
     public boolean success;
