@@ -34,8 +34,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.activityName.setText(mData.get(position));
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.title.setText(mData.get(position));
         //将数据保存在itemView的Tag中，以便点击时获取
         holder.itemView.setTag(mData.get(position));
     }
@@ -57,16 +57,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> im
     }
 
     public interface OnItemClickListener {
-        void onItemClick(String activityName);
+        void onItemClick(String key);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView activityName;
+        TextView title;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            activityName = itemView.findViewById(R.id.tv_activity_name);
+            title = itemView.findViewById(R.id.tv_title);
         }
     }
 }

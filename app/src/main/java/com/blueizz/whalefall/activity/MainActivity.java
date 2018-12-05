@@ -54,8 +54,8 @@ public class MainActivity extends Activity implements IMainView {
     private void setListener() {
         mAdapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(String activityName) {
-                Class cls = ActivityRouter.getActivityMap().get(activityName);
+            public void onItemClick(String key) {
+                Class cls = ActivityRouter.getActivityMap().get(key);
                 Intent intent = new Intent(MainActivity.this, cls);
                 startActivity(intent);
             }
