@@ -2,6 +2,7 @@ package com.blueizz.whalefall;
 
 import android.app.Activity;
 
+import com.blueizz.bitmap.StrokeActivity;
 import com.blueizz.reflection.ReflectionActivity;
 
 import java.util.HashMap;
@@ -13,10 +14,11 @@ public class ActivityRouter {
 
     static {
         activityMap.put("反射", ReflectionActivity.class);
-        Class annotationClass = getClass("com.blueizz.demo.annotation_demo.AnnotationActivity");
+        Class annotationClass = getClass("com.blueizz.annotation.AnnotationActivity");
         if (annotationClass != null) {
             activityMap.put("注解", annotationClass);
         }
+        activityMap.put("Bitmap描边", StrokeActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {

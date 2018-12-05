@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.blueizz.bitmap">
+
+    <application>
+        <activity android:name=".StrokeActivity" />
+    </application>
+</manifest>
