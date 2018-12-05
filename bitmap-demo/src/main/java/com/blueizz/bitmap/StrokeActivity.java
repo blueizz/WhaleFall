@@ -45,7 +45,7 @@ public class StrokeActivity extends Activity {
         canvas.drawBitmap(b.extractAlpha(), 0, 3, paint);
 
         /**
-         * 按下时显示描边，需要将ImageView的clickable设置为true
+         * 按住时显示描边，需要将ImageView的clickable设置为true
          */
         //        StateListDrawable sld = new StateListDrawable();
         //        sld.addState(new int[]{android.R.attr.state_pressed}, new BitmapDrawable(getResources(), strokeBitmap));
