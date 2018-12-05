@@ -31,7 +31,7 @@ public class AnnotationActivity extends Activity {
                 //通过注解的isCheck属性判断是否测试当前方法
                 if (checkAnnotation.isCheck()) {
                     try {
-                        method.invoke(noBug, null);
+                        method.invoke(noBug, new Object[]{});
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.i(TAG, "Error：" + method.getName());
