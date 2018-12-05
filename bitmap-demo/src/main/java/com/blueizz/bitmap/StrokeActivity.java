@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
@@ -14,6 +16,12 @@ import android.widget.ImageView;
  * 为Bitmap添加描边
  */
 public class StrokeActivity extends Activity {
+
+    private final Handler mLeakyHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,6 +33,14 @@ public class StrokeActivity extends Activity {
         Paint paint = new Paint();
         paint.setColor(Color.RED);
         setDrawableStroke(imageView, paint);
+
+        mLeakyHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 1000 * 60 * 10);
+        finish();
     }
 
     /**

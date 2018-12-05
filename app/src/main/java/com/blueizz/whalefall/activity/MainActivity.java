@@ -25,11 +25,7 @@ public class MainActivity extends Activity implements IMainView {
 
     private MainPresenter mPresenter;
 
-    private final Handler mLeakyHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-        }
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +34,6 @@ public class MainActivity extends Activity implements IMainView {
 
         initView();
         initPresenter();
-
-        mLeakyHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, 1000 * 60 * 10);
-        finish();
     }
 
     private void initView() {
