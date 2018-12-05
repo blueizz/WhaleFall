@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.ImageView;
 
 /**
@@ -17,6 +18,7 @@ import android.widget.ImageView;
  */
 public class StrokeActivity extends Activity {
 
+    //模拟内存泄漏
     private final Handler mLeakyHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -37,9 +39,12 @@ public class StrokeActivity extends Activity {
         mLeakyHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-
             }
-        }, 1000 * 60 * 10);
+        }, 1000 * 60);
+
+    }
+
+    public void onFinish(View v) {
         finish();
     }
 
