@@ -3,6 +3,8 @@ package com.blueizz.whalefall.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +25,12 @@ public class MainActivity extends Activity implements IMainView {
 
     private MainPresenter mPresenter;
 
+    private final Handler mLeakyHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +38,14 @@ public class MainActivity extends Activity implements IMainView {
 
         initView();
         initPresenter();
+
+        mLeakyHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, 1000 * 60 * 10);
+        finish();
     }
 
     private void initView() {
