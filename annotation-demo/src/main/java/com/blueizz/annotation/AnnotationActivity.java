@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.blueizz.annotation.CheckAnnotation;
-import com.blueizz.annotation.NoBug;
-
 import java.lang.reflect.Method;
 
 public class AnnotationActivity extends Activity {
