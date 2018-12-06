@@ -37,4 +37,5 @@ dependencies {
     implementation project(':reflection-demo')
     implementation project(':annotation-demo')
     implementation project(':bitmap-demo')
+    implementation project(':collection-demo')
 }

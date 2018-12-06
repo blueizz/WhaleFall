@@ -3,6 +3,7 @@ package com.blueizz.whalefall;
 import android.app.Activity;
 
 import com.blueizz.bitmap.StrokeActivity;
+import com.blueizz.collection.CollectionActivity;
 import com.blueizz.reflection.ReflectionActivity;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class ActivityRouter {
             activityMap.put("注解", annotationClass);
         }
         activityMap.put("Bitmap描边", StrokeActivity.class);
+        activityMap.put("集合框架", CollectionActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {
