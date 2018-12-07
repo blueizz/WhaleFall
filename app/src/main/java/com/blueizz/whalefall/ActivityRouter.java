@@ -6,6 +6,9 @@ import com.blueizz.bitmap.StrokeActivity;
 import com.blueizz.collection.CollectionActivity;
 import com.blueizz.reflection.ReflectionActivity;
 
+import org.joor.Reflect;
+import org.joor.ReflectException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +18,13 @@ public class ActivityRouter {
 
     static {
         activityMap.put("反射", ReflectionActivity.class);
-        Class annotationClass = getClass("com.blueizz.annotation.AnnotationActivity");
+
+        Class annotationClass = null;
+        try {
+            annotationClass = Reflect.on("com.blueizz.annotation.AnnotationActivity").get();
+        } catch (ReflectException e) {
+            e.printStackTrace();
+        }
         if (annotationClass != null) {
             activityMap.put("注解", annotationClass);
         }
@@ -25,15 +34,5 @@ public class ActivityRouter {
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {
         return activityMap;
-    }
-
-    private static Class getClass(String className) {
-        Class cls = null;
-        try {
-            cls = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return cls;
     }
 }
