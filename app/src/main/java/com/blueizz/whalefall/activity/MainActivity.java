@@ -25,8 +25,6 @@ public class MainActivity extends Activity implements IMainView {
 
     private MainPresenter mPresenter;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
