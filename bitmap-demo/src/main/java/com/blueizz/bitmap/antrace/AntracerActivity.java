@@ -1,6 +1,8 @@
 package com.blueizz.bitmap.antrace;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -22,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AntracerActivity extends Activity {
-
+    private static int REQUEST_PERMISSION = 133;
     private ImageView mPointImage;
     private Button mTracer;
 
@@ -55,6 +59,14 @@ public class AntracerActivity extends Activity {
                 new Thread(new ThresholdThread()).start();
             }
         });
+
+        if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                AntracerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(AntracerActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION);
+            return;
+        }
     }
 
     public void drawPoints(List<PointInfo> data) {
@@ -135,7 +147,6 @@ public class AntracerActivity extends Activity {
         public void handleMessage(Message msg) {
             Path path = (Path) msg.obj;
         }
-
     };
 
     class TraceThread implements Runnable {
@@ -143,9 +154,15 @@ public class AntracerActivity extends Activity {
         @Override
         public void run() {
             Path path = Utils.traceImage(mMomoMap);
+            String svgFile = tempSvgFile();
+            Utils.saveSVG(svgFile, mMomoMap.getWidth(), mMomoMap.getHeight());
             Message msg = traceHandler.obtainMessage(0, path);
             traceHandler.sendMessage(msg);
         }
+    }
+
+    public String tempSvgFile() {
+        return this.getExternalCacheDir().toString() + "/temp_svg.svg";
     }
 
     static {
