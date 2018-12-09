@@ -3,5 +3,6 @@
 
     <application>
         <activity android:name=".StrokeActivity" />
+        <activity android:name=".antrace.AntracerActivity" />
     </application>
 </manifest>

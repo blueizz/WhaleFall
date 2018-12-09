@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import com.blueizz.bitmap.StrokeActivity;
 import com.blueizz.collection.CollectionActivity;
+import com.blueizz.bitmap.antrace.AntracerActivity;
 import com.blueizz.reflection.ReflectionActivity;
 
 import org.joor.Reflect;
@@ -30,6 +31,7 @@ public class ActivityRouter {
         }
         activityMap.put("Bitmap描边", StrokeActivity.class);
         activityMap.put("集合框架", CollectionActivity.class);
+        activityMap.put("位图转矢量图", AntracerActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {
