@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,11 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.alibaba.fastjson.JSON;
 import com.blueizz.bitmap.R;
 import com.blueizz.bitmap.antrace.bean.Path;
 import com.blueizz.bitmap.antrace.bean.PointInfo;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class AntracerActivity extends Activity {
@@ -31,7 +34,7 @@ public class AntracerActivity extends Activity {
     private Button mTracer;
 
     private Bitmap mPointMap;
-    private int radius = 2;
+    private int radius = 4;
 
     private Bitmap mMomoMap;
 
@@ -48,8 +51,8 @@ public class AntracerActivity extends Activity {
         mPointImage = findViewById(R.id.iv_map);
         mTracer = findViewById(R.id.btn_tracer);
 
-        mPointMap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
-        mMomoMap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+        mPointMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
+        mMomoMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
 
         drawPoints(getData());
 
@@ -72,6 +75,7 @@ public class AntracerActivity extends Activity {
     public void drawPoints(List<PointInfo> data) {
         Canvas canvas = new Canvas(mPointMap);
         Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.parseColor("#33CCFF"));
         paint.setStrokeWidth(2 * radius);
         paint.setStrokeCap(Paint.Cap.SQUARE);
@@ -80,50 +84,18 @@ public class AntracerActivity extends Activity {
             float cy = point.getY() * (2 * radius);
             canvas.drawPoint(cx, cy, paint);
         }
+
+        //        SvgPathParser parser = new SvgPathParser();
+        //        try {
+        //            android.graphics.Path path = parser.parsePath(getString(R.string.map));
+        //            paint.setColor(Color.RED);
+        //            canvas.drawPath(path, paint);
+        //        } catch (Exception e) {
+        //        }
+
+        saveBitmap(mPointMap);
         mPointImage.setImageBitmap(mPointMap);
     }
-
-    public static Bitmap drawableToBitmap(Drawable drawable) {
-
-        int w = (int) (drawable.getIntrinsicWidth() * 0.3);
-        int h = (int) (drawable.getIntrinsicHeight() * 0.3);
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        //注意，下面三行代码要用到，否则在View或者SurfaceView里的canvas.drawBitmap会看不到图
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, w, h);
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
-    private List<PointInfo> getData() {
-        List<PointInfo> data = new ArrayList<>();
-        data.add(new PointInfo(20, 20));
-        data.add(new PointInfo(20, 21));
-
-        data.add(new PointInfo(21, 20));
-        data.add(new PointInfo(21, 21));
-        data.add(new PointInfo(21, 22));
-        data.add(new PointInfo(21, 23));
-
-        data.add(new PointInfo(22, 20));
-        data.add(new PointInfo(22, 23));
-        data.add(new PointInfo(22, 24));
-        data.add(new PointInfo(22, 25));
-
-        data.add(new PointInfo(23, 20));
-        data.add(new PointInfo(23, 25));
-        data.add(new PointInfo(23, 26));
-        data.add(new PointInfo(23, 27));
-
-        data.add(new PointInfo(24, 20));
-        data.add(new PointInfo(24, 21));
-        data.add(new PointInfo(24, 22));
-        data.add(new PointInfo(24, 23));
-
-        return data;
-    }
-
 
     private Handler thresholdHandler = new Handler() {
         @Override
@@ -167,6 +139,29 @@ public class AntracerActivity extends Activity {
 
     static {
         System.loadLibrary("antrace");
+    }
+
+    private List<PointInfo> getData() {
+        String jsonData = getString(R.string.point_data);
+        List<PointInfo> data = JSON.parseArray(jsonData, PointInfo.class);
+        return data;
+    }
+
+    private void saveBitmap(Bitmap bitmap) {
+        File file = new File(this.getExternalCacheDir().toString() + "/temp_bitmap.jpg");
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

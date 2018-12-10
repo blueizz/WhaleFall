@@ -27,8 +27,6 @@ public class MainModel extends BaseModel {
         for (Map.Entry<String, Class<? extends Activity>> entry : activityMap.entrySet()) {
             data.add(entry.getKey());
         }
-        //反转List
-        Collections.reverse(data);
         resultSuccess(SUCCESS_GET_DATA, data);
     }
 

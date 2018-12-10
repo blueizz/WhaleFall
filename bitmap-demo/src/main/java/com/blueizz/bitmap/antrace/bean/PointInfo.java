@@ -4,6 +4,10 @@ public class PointInfo {
     private int x;
     private int y;
 
+
+    public PointInfo() {
+    }
+
     public PointInfo(int x, int y) {
         this.x = x;
         this.y = y;
