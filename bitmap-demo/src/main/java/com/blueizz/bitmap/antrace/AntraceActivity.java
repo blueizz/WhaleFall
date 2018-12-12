@@ -30,7 +30,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class AntracerActivity extends Activity {
+public class AntraceActivity extends Activity {
     private static int REQUEST_PERMISSION = 133;
 
     private ImageView mPointImage;
@@ -39,7 +39,7 @@ public class AntracerActivity extends Activity {
     private Bitmap mPointMap;
     private int radius = 4;
 
-    private Bitmap mMomoMap;
+    private Bitmap mThresholdMap;
 
     private Canvas mCanvas;
     private Paint mPaint;
@@ -48,7 +48,7 @@ public class AntracerActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_antracer);
+        setContentView(R.layout.activity_antrace);
 
         initView();
     }
@@ -58,7 +58,7 @@ public class AntracerActivity extends Activity {
         mTracer = findViewById(R.id.btn_tracer);
 
         mPointMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
-        mMomoMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
+        mThresholdMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
 
         drawPoints(getData());
 
@@ -71,15 +71,15 @@ public class AntracerActivity extends Activity {
                         .doOnNext(new Consumer<Integer>() {
                             @Override
                             public void accept(Integer integer) {
-                                Utils.threshold(mPointMap, 127, mMomoMap);
+                                Utils.threshold(mPointMap, 127, mThresholdMap);
                             }
                         })
                         .doOnNext(new Consumer<Integer>() {
                             @Override
                             public void accept(Integer integer) {
-                                Utils.traceImage(mMomoMap);
+                                Utils.traceImage(mThresholdMap);
                                 String svgFile = tempSvgFile();
-                                Utils.saveSVG(svgFile, mMomoMap.getWidth(), mMomoMap.getHeight());
+                                Utils.saveSVG(svgFile, mThresholdMap.getWidth(), mThresholdMap.getHeight());
                             }
                         }).subscribe();
 
@@ -101,8 +101,8 @@ public class AntracerActivity extends Activity {
         });
 
         if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                AntracerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(AntracerActivity.this,
+                AntraceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(AntraceActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_PERMISSION);
             return;
@@ -147,6 +147,7 @@ public class AntracerActivity extends Activity {
 
     /**
      * SVG缓存路径
+     * /Android/data/com.blueizz.whalefall/cache/temp_svg.svg
      *
      * @return
      */

@@ -5,6 +5,6 @@
 
     <application>
         <activity android:name=".StrokeActivity" />
-        <activity android:name=".antrace.AntracerActivity" />
+        <activity android:name=".antrace.AntraceActivity" />
     </application>
 </manifest>
