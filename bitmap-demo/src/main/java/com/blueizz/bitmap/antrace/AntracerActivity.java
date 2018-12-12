@@ -18,14 +18,12 @@ import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSON;
 import com.blueizz.bitmap.R;
-import com.blueizz.bitmap.antrace.bean.Path;
 import com.blueizz.bitmap.antrace.bean.PointInfo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -79,7 +77,7 @@ public class AntracerActivity extends Activity {
                         .doOnNext(new Consumer<Integer>() {
                             @Override
                             public void accept(Integer integer) {
-                                Path path = Utils.traceImage(mMomoMap);
+                                Utils.traceImage(mMomoMap);
                                 String svgFile = tempSvgFile();
                                 Utils.saveSVG(svgFile, mMomoMap.getWidth(), mMomoMap.getHeight());
                             }
@@ -137,18 +135,23 @@ public class AntracerActivity extends Activity {
 
     }
 
-    public String tempSvgFile() {
-        return this.getExternalCacheDir().toString() + "/temp_svg.svg";
+    private List<PointInfo> getData() {
+        String jsonData = getString(R.string.point_data);
+        List<PointInfo> data = JSON.parseArray(jsonData, PointInfo.class);
+        return data;
     }
 
     static {
         System.loadLibrary("antrace");
     }
 
-    private List<PointInfo> getData() {
-        String jsonData = getString(R.string.point_data);
-        List<PointInfo> data = JSON.parseArray(jsonData, PointInfo.class);
-        return data;
+    /**
+     * SVG缓存路径
+     *
+     * @return
+     */
+    public String tempSvgFile() {
+        return this.getExternalCacheDir().toString() + "/temp_svg.svg";
     }
 
     /**
@@ -156,7 +159,7 @@ public class AntracerActivity extends Activity {
      *
      * @param bitmap
      */
-    private void saveBitmap(Bitmap bitmap) {
+    public void saveBitmap(Bitmap bitmap) {
         File file = new File(this.getExternalCacheDir().toString() + "/temp_bitmap.jpg");
         FileOutputStream out = null;
         try {
