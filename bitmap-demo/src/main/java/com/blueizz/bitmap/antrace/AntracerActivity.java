@@ -1,6 +1,7 @@
 package com.blueizz.bitmap.antrace;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -8,8 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,10 +25,16 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class AntracerActivity extends Activity {
     private static int REQUEST_PERMISSION = 133;
+
     private ImageView mPointImage;
     private Button mTracer;
 
@@ -37,6 +42,9 @@ public class AntracerActivity extends Activity {
     private int radius = 4;
 
     private Bitmap mMomoMap;
+
+    private Canvas mCanvas;
+    private Paint mPaint;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,9 +65,40 @@ public class AntracerActivity extends Activity {
         drawPoints(getData());
 
         mTracer.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("CheckResult")
             @Override
             public void onClick(View v) {
-                new Thread(new ThresholdThread()).start();
+                Observable.just(1)
+                        .observeOn(Schedulers.newThread())
+                        .doOnNext(new Consumer<Integer>() {
+                            @Override
+                            public void accept(Integer integer) {
+                                Utils.threshold(mPointMap, 127, mMomoMap);
+                            }
+                        })
+                        .doOnNext(new Consumer<Integer>() {
+                            @Override
+                            public void accept(Integer integer) {
+                                Path path = Utils.traceImage(mMomoMap);
+                                String svgFile = tempSvgFile();
+                                Utils.saveSVG(svgFile, mMomoMap.getWidth(), mMomoMap.getHeight());
+                            }
+                        }).subscribe();
+
+                /**
+                 * RxJava将第一个操作的返回值传递给下一个操作
+                 */
+                //                Observable.fromCallable(new Callable<String>() {
+                //                    @Override
+                //                    public String call() {
+                //                        return "hello world";
+                //                    }
+                //                }).subscribe(new Consumer<String>() {
+                //                    @Override
+                //                    public void accept(String s) {
+                //                        Toast.makeText(AntracerActivity.this, s, Toast.LENGTH_SHORT).show();
+                //                    }
+                //                });
             }
         });
 
@@ -73,16 +112,16 @@ public class AntracerActivity extends Activity {
     }
 
     public void drawPoints(List<PointInfo> data) {
-        Canvas canvas = new Canvas(mPointMap);
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.parseColor("#33CCFF"));
-        paint.setStrokeWidth(2 * radius);
-        paint.setStrokeCap(Paint.Cap.SQUARE);
+        mCanvas = new Canvas(mPointMap);
+        mPaint = new Paint();
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setColor(Color.parseColor("#33CCFF"));
+        mPaint.setStrokeWidth(2 * radius);
+        mPaint.setStrokeCap(Paint.Cap.SQUARE);
         for (PointInfo point : data) {
             float cx = point.getX() * (2 * radius);
             float cy = point.getY() * (2 * radius);
-            canvas.drawPoint(cx, cy, paint);
+            mCanvas.drawPoint(cx, cy, mPaint);
         }
 
         //        SvgPathParser parser = new SvgPathParser();
@@ -93,44 +132,9 @@ public class AntracerActivity extends Activity {
         //        } catch (Exception e) {
         //        }
 
-        saveBitmap(mPointMap);
+        //        saveBitmap(mPointMap);
         mPointImage.setImageBitmap(mPointMap);
-    }
 
-    private Handler thresholdHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            new Thread(new TraceThread()).start();
-        }
-    };
-
-    class ThresholdThread implements Runnable {
-
-        @Override
-        public void run() {
-            Utils.threshold(mPointMap, 127, mMomoMap);
-            Message msg = thresholdHandler.obtainMessage(127, mMomoMap);
-            thresholdHandler.sendMessage(msg);
-        }
-    }
-
-    private Handler traceHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Path path = (Path) msg.obj;
-        }
-    };
-
-    class TraceThread implements Runnable {
-
-        @Override
-        public void run() {
-            Path path = Utils.traceImage(mMomoMap);
-            String svgFile = tempSvgFile();
-            Utils.saveSVG(svgFile, mMomoMap.getWidth(), mMomoMap.getHeight());
-            Message msg = traceHandler.obtainMessage(0, path);
-            traceHandler.sendMessage(msg);
-        }
     }
 
     public String tempSvgFile() {
@@ -147,6 +151,11 @@ public class AntracerActivity extends Activity {
         return data;
     }
 
+    /**
+     * 保存bitmap
+     *
+     * @param bitmap
+     */
     private void saveBitmap(Bitmap bitmap) {
         File file = new File(this.getExternalCacheDir().toString() + "/temp_bitmap.jpg");
         FileOutputStream out = null;
