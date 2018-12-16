@@ -107,6 +107,8 @@ public class AntraceActivity extends Activity {
                     REQUEST_PERMISSION);
             return;
         }
+
+        invalidateOptionsMenu();
     }
 
     public void drawPoints(List<PointInfo> data) {
