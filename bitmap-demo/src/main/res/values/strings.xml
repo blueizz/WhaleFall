@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">bitmap-demo</string>
+    <string name="storage_failure">手机存储权限获取失败，请到手机“设置 - 应用 - %s - 权限”中开启录音的权限</string>
 </resources>

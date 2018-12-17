@@ -8,17 +8,20 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blueizz.bitmap.R;
 import com.blueizz.bitmap.antrace.bean.PointInfo;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,13 +34,13 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class AntraceActivity extends Activity {
-    private static int REQUEST_PERMISSION = 133;
+    private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
 
-    private ImageView mPointImage;
+    private PhotoView mPointImage;
     private Button mTracer;
 
     private Bitmap mPointMap;
-    private int radius = 4;
+    private int radius = 2;
 
     private Bitmap mThresholdMap;
 
@@ -94,21 +97,11 @@ public class AntraceActivity extends Activity {
                 //                }).subscribe(new Consumer<String>() {
                 //                    @Override
                 //                    public void accept(String s) {
-                //                        Toast.makeText(AntracerActivity.this, s, Toast.LENGTH_SHORT).show();
+                //                        Toast.makeText(AntraceActivity.this, s, Toast.LENGTH_SHORT).show();
                 //                    }
                 //                });
             }
         });
-
-        if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                AntraceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            ActivityCompat.requestPermissions(AntraceActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_PERMISSION);
-            return;
-        }
-
-        invalidateOptionsMenu();
     }
 
     public void drawPoints(List<PointInfo> data) {
@@ -132,7 +125,7 @@ public class AntraceActivity extends Activity {
         //        } catch (Exception e) {
         //        }
 
-        //        saveBitmap(mPointMap);
+        saveBitmap(mPointMap);
         mPointImage.setImageBitmap(mPointMap);
 
     }
@@ -143,9 +136,6 @@ public class AntraceActivity extends Activity {
         return data;
     }
 
-    static {
-        System.loadLibrary("antrace");
-    }
 
     /**
      * SVG缓存路径
@@ -165,6 +155,12 @@ public class AntraceActivity extends Activity {
     public void saveBitmap(Bitmap bitmap) {
         File file = new File(this.getExternalCacheDir().toString() + "/temp_bitmap.jpg");
         FileOutputStream out = null;
+        boolean hasPermission = checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE, String.format(
+                        getString(R.string.storage_failure), "鲸落"));
+        if (!hasPermission) {
+            return;
+        }
         try {
             out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -176,6 +172,48 @@ public class AntraceActivity extends Activity {
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * 动态申请权限
+     *
+     * @param permission
+     * @param requestCode
+     * @param tip
+     * @return
+     */
+    public Boolean checkPermission(String permission, int requestCode, String tip) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+        if (ContextCompat.checkSelfPermission(AntraceActivity.this,
+                permission) != PackageManager.PERMISSION_GRANTED) {
+            //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true
+            if (ActivityCompat.shouldShowRequestPermissionRationale(AntraceActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Toast.makeText(AntraceActivity.this, tip, Toast.LENGTH_LONG).show();
+            } else {
+                ActivityCompat.requestPermissions(AntraceActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    saveBitmap(mPointMap);
+                } else {
+                    Toast.makeText(AntraceActivity.this, String.format(
+                            getString(R.string.storage_failure), "鲸落"), Toast.LENGTH_LONG).show();
+                }
+                break;
         }
     }
 
