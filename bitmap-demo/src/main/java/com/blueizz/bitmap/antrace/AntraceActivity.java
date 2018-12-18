@@ -108,7 +108,7 @@ public class AntraceActivity extends Activity {
         mCanvas = new Canvas(mPointMap);
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.parseColor("#33CCFF"));
+        mPaint.setColor(Color.parseColor("#fa7268"));
         mPaint.setStrokeWidth(2 * radius);
         mPaint.setStrokeCap(Paint.Cap.SQUARE);
         for (PointInfo point : data) {
