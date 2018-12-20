@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.blueizz.bitmap.R;
-import com.blueizz.bitmap.antrace.bean.PointInfo;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
@@ -108,7 +107,7 @@ public class AntraceActivity extends Activity {
         mCanvas = new Canvas(mPointMap);
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.parseColor("#fa7268"));
+        mPaint.setColor(getResources().getColor(R.color.living_coral));
         mPaint.setStrokeWidth(2 * radius);
         mPaint.setStrokeCap(Paint.Cap.SQUARE);
         for (PointInfo point : data) {
