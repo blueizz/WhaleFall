@@ -1,16 +1,15 @@
 package com.blueizz.bitmap;
 
 import android.animation.TypeEvaluator;
-
-import com.blueizz.bitmap.antrace.PointInfo;
+import android.graphics.PointF;
 
 public class MarkEvaluator implements TypeEvaluator {
     @Override
     public Object evaluate(float fraction, Object startValue, Object endValue) {
-        PointInfo start = (PointInfo) startValue;
-        PointInfo end = (PointInfo) endValue;
-        float x = start.getX() + fraction * (end.getX() - start.getX());
-        float y = start.getY() + fraction * (end.getY() - start.getY());
-        return new PointInfo(x, y);
+        PointF start = (PointF) startValue;
+        PointF end = (PointF) endValue;
+        float x = start.x + fraction * (end.x - start.x);
+        float y = start.y + fraction * (end.y - start.y);
+        return new PointF(x, y);
     }
 }

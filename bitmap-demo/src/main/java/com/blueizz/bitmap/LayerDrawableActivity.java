@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -15,7 +16,6 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.blueizz.bitmap.antrace.PointInfo;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.Random;
@@ -53,7 +53,6 @@ public class LayerDrawableActivity extends Activity {
 
         setContentView(R.layout.activity_layer_drawable);
         mRandom = new Random();
-
         initView();
     }
 
@@ -111,6 +110,9 @@ public class LayerDrawableActivity extends Activity {
         mCanvas = new Canvas(mapBitmap);
         mCanvas.drawBitmap(getBitmapByDrawable(R.drawable.west_lake), 0, 0, new Paint());
         //        mLayerImage.invalidateDrawable(mLayer);
+        /**
+         * Todo:存在内存泄漏
+         */
         Observable.interval(0, 3000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
@@ -119,17 +121,18 @@ public class LayerDrawableActivity extends Activity {
                         int endX = mRandom.nextInt(1920 - markWidth);
                         int endY = mRandom.nextInt(1080 - markHeight);
                         mAnimator = ValueAnimator.ofObject(new MarkEvaluator(),
-                                new PointInfo(markX, markY),
-                                new PointInfo(endX, endY));
+                                new PointF(markX, markY),
+                                new PointF(endX, endY));
                         mAnimator.setDuration(2000);
                         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
                             public void onAnimationUpdate(ValueAnimator animation) {
-                                PointInfo info = (PointInfo) animation.getAnimatedValue();
-                                drawPath(info.getX(), info.getY());
-                                drawMark(info.getX(), info.getY());
-                                markX = info.getX();
-                                markY = info.getY();
+                                PointF info = (PointF) animation.getAnimatedValue();
+                                drawPath(info.x, info.y);
+                                drawMark(info.x, info.y);
+                                markX = info.x;
+                                markY = info.y;
+
                             }
                         });
                         mAnimator.start();
@@ -145,7 +148,8 @@ public class LayerDrawableActivity extends Activity {
      */
     private void drawPath(float x, float y) {
         mCanvas = new Canvas(pathBitmap);
-        mPath.lineTo(x, y);
+        float wt = (markX + x) / 2;
+        mPath.quadTo(wt, markY, x, y);
         mCanvas.drawPath(mPath, mPaint);
     }
 
@@ -160,6 +164,19 @@ public class LayerDrawableActivity extends Activity {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         mCanvas.drawBitmap(mMarkIcon, x, y, mPaint);
         markDrawable.invalidateSelf();
+    }
+
+    private PointF interpolatedPosition(PointF point0, PointF point1,
+                                        PointF point2, PointF point3, float i) {
+        float u3 = i * i * i;
+        float u2 = i * i;
+        float f1 = -0.5f * u3 + u2 - 0.5f * i;
+        float f2 = 1.5f * u3 - 2.5f * u2 + 1.0f;
+        float f3 = -1.5f * u3 + 2.0f * u2 + 0.5f * i;
+        float f4 = 0.5f * u3 - 0.5f * u2;
+        float x = point0.x * f1 + point1.x * f2 + point2.x * f3 + point3.x * f4;
+        float y = point0.y * f1 + point1.y * f2 + point2.y * f3 + point3.y * f4;
+        return new PointF(x, y);
     }
 
     /**

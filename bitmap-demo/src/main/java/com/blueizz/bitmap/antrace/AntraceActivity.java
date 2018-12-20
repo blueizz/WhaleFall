@@ -6,8 +6,8 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -103,16 +103,16 @@ public class AntraceActivity extends Activity {
         });
     }
 
-    public void drawPoints(List<PointInfo> data) {
+    public void drawPoints(List<PointF> data) {
         mCanvas = new Canvas(mPointMap);
         mPaint = new Paint();
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(getResources().getColor(R.color.living_coral));
         mPaint.setStrokeWidth(2 * radius);
         mPaint.setStrokeCap(Paint.Cap.SQUARE);
-        for (PointInfo point : data) {
-            float cx = point.getX() * (2 * radius);
-            float cy = point.getY() * (2 * radius);
+        for (PointF point : data) {
+            float cx = point.x * (2 * radius);
+            float cy = point.y * (2 * radius);
             mCanvas.drawPoint(cx, cy, mPaint);
         }
 
@@ -129,9 +129,9 @@ public class AntraceActivity extends Activity {
 
     }
 
-    private List<PointInfo> getData() {
+    private List<PointF> getData() {
         String jsonData = getString(R.string.point_data);
-        List<PointInfo> data = JSON.parseArray(jsonData, PointInfo.class);
+        List<PointF> data = JSON.parseArray(jsonData, PointF.class);
         return data;
     }
 
