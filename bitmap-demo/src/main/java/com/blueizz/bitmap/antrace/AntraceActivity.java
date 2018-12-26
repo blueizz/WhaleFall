@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.blueizz.bitmap.PGM;
 import com.blueizz.bitmap.R;
 import com.github.chrisbanes.photoview.PhotoView;
 
@@ -125,7 +126,18 @@ public class AntraceActivity extends Activity {
         //        }
 
         saveBitmap(mPointMap);
-        mPointImage.setImageBitmap(mPointMap);
+
+        String path = "amicro.pgm";
+        int iw, ih;
+        int[] pix;
+        PGM pgm = new PGM(this);
+        pgm.readPGMHeader(path);
+        iw = pgm.getWidth();
+        ih = pgm.getHeight();
+        pix = pgm.readData(iw, ih, 5);
+        Bitmap bitmap = Bitmap.createBitmap(iw, ih, Bitmap.Config.ARGB_4444);
+        bitmap.setPixels(pix, 0, iw, 0, 0, iw, ih);
+        mPointImage.setImageBitmap(bitmap);
 
     }
 
