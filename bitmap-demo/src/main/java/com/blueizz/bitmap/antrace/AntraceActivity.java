@@ -69,7 +69,7 @@ public class AntraceActivity extends Activity {
             @SuppressLint("CheckResult")
             @Override
             public void onClick(View v) {
-                Observable.just(1)
+                Observable.just(0)
                         .observeOn(Schedulers.newThread())
                         .doOnNext(new Consumer<Integer>() {
                             @Override
@@ -77,14 +77,14 @@ public class AntraceActivity extends Activity {
                                 Utils.threshold(mPointMap, 127, mThresholdMap);
                             }
                         })
-                        .doOnNext(new Consumer<Integer>() {
+                        .subscribe(new Consumer<Integer>() {
                             @Override
                             public void accept(Integer integer) {
                                 Utils.traceImage(mThresholdMap);
                                 String svgFile = tempSvgFile();
                                 Utils.saveSVG(svgFile, mThresholdMap.getWidth(), mThresholdMap.getHeight());
                             }
-                        }).subscribe();
+                        });
 
                 /**
                  * RxJava将第一个操作的返回值传递给下一个操作
