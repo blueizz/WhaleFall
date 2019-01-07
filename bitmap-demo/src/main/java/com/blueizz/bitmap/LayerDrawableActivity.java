@@ -166,19 +166,6 @@ public class LayerDrawableActivity extends Activity {
         markDrawable.invalidateSelf();
     }
 
-    private PointF interpolatedPosition(PointF point0, PointF point1,
-                                        PointF point2, PointF point3, float i) {
-        float u3 = i * i * i;
-        float u2 = i * i;
-        float f1 = -0.5f * u3 + u2 - 0.5f * i;
-        float f2 = 1.5f * u3 - 2.5f * u2 + 1.0f;
-        float f3 = -1.5f * u3 + 2.0f * u2 + 0.5f * i;
-        float f4 = 0.5f * u3 - 0.5f * u2;
-        float x = point0.x * f1 + point1.x * f2 + point2.x * f3 + point3.x * f4;
-        float y = point0.y * f1 + point1.y * f2 + point2.y * f3 + point3.y * f4;
-        return new PointF(x, y);
-    }
-
     /**
      * 从Drawable文件夹下获取Bitmap
      *
