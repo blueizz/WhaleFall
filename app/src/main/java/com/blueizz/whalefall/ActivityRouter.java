@@ -7,6 +7,7 @@ import com.blueizz.bitmap.StrokeActivity;
 import com.blueizz.collection.CollectionActivity;
 import com.blueizz.bitmap.antrace.AntraceActivity;
 import com.blueizz.reflection.ReflectionActivity;
+import com.blueizz.sticker.StickerViewActivity;
 
 import org.joor.Reflect;
 import org.joor.ReflectException;
@@ -34,6 +35,7 @@ public class ActivityRouter {
         activityMap.put("位图转矢量图", AntraceActivity.class);
         activityMap.put("多图层绘制", LayerDrawableActivity.class);
         activityMap.put("集合框架", CollectionActivity.class);
+        activityMap.put("Android贴纸", StickerViewActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {

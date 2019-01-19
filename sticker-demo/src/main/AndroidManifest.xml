@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.blueizz.sticker">
+
+    <application>
+        <activity android:name=".StickerViewActivity" />
+        <activity android:name=".PreviewActivity" />
+        <activity android:name=".StickerSelectorListActivity" />
+    </application>
+</manifest>
