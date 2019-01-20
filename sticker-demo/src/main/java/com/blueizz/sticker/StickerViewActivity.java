@@ -114,7 +114,7 @@ public class StickerViewActivity extends Activity implements View.OnClickListene
                 handler.sendEmptyMessage(0);
                 return;
             }
-            File successFile = FileUtils.getCacheFile();
+            File successFile = FileUtils.getCacheFile(StickerViewActivity.this);
             if (BitmapUtils.saveBitmap(dstBitmap, successFile) && successFile != null && successFile.exists()) {
                 handler.obtainMessage(1, successFile.toString()).sendToTarget();
             } else {

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -66,7 +68,7 @@ public class StickerLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return true;
+        return isInEdit();
     }
 
     /**
@@ -79,6 +81,17 @@ public class StickerLayout extends FrameLayout {
     public boolean onTouchEvent(MotionEvent event) {
         getPreview();
         return super.onTouchEvent(event);
+    }
+
+    private boolean isInEdit() {
+        boolean isEdit = false;
+        for (StickerView item : stickerViews) {
+            if (item == null) continue;
+            isEdit = item.isInEditMode();
+            RectF rectF = item.getSticker().getSrcImageBound();
+            Log.i("StickerLayout", rectF.left + "," + rectF.top + "," + rectF.right + "," + rectF.bottom);
+        }
+        return isEdit;
     }
 
     /**

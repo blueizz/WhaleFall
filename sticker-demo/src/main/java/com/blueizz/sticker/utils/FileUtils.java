@@ -1,8 +1,7 @@
 package com.blueizz.sticker.utils;
 
+import android.content.Context;
 import android.os.Environment;
-
-import com.blueizz.sticker.Lib;
 
 import java.io.File;
 
@@ -19,8 +18,8 @@ public class FileUtils {
      *
      * @return
      */
-    public static File getCacheFile() {
-        File file = new File(getAppCacheDir(), "image");
+    public static File getCacheFile(Context context) {
+        File file = new File(getAppCacheDir(context), "image");
         if (!file.exists()) {
             file.mkdirs();
         }
@@ -28,13 +27,13 @@ public class FileUtils {
         return new File(file, fileName);
     }
 
-    private static File getAppCacheDir() {
+    private static File getAppCacheDir(Context context) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
                 || !Environment.isExternalStorageRemovable()) {
-            mCacheFile = Lib.getInstance().getExternalCacheDir();
+            mCacheFile = context.getExternalCacheDir();
         }
         if (mCacheFile == null) {
-            mCacheFile = Lib.getInstance().getCacheDir();
+            mCacheFile = context.getCacheDir();
         }
         return mCacheFile;
     }
