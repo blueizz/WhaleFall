@@ -25,7 +25,7 @@ public class PreviewActivity extends Activity {
             return;
         }
         setContentView(R.layout.activity_preview);
-        ImageView ivPreview = (ImageView) findViewById(R.id.iv_preview);
+        ImageView ivPreview = findViewById(R.id.iv_preview);
         ivPreview.setImageURI(Uri.parse(path));
     }
 }

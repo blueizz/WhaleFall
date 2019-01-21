@@ -9,10 +9,6 @@ import android.view.MotionEvent;
 
 import com.blueizz.sticker.utils.PointUtils;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public class Sticker {
     // 绘制图片的矩阵
     private Matrix matrix;
@@ -29,7 +25,7 @@ public class Sticker {
      *
      * @param canvas
      */
-    void draw(Canvas canvas,Bitmap bitmap) {
+    void draw(Canvas canvas, Bitmap bitmap) {
         canvas.drawBitmap(bitmap, matrix, null);
     }
 
@@ -43,20 +39,6 @@ public class Sticker {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
-        return point;
-    }
-
-    /**
-     * 获取图片中心点
-     */
-    PointF getImageMidPoint(Matrix matrix) {
-        PointF point = new PointF();
-        float[] points = PointUtils.getBitmapPoints(srcImage, matrix);
-        float x1 = points[0];
-        float x2 = points[2];
-        float y2 = points[3];
-        float y4 = points[7];
-        point.set((x1 + x2) / 2, (y2 + y4) / 2);
         return point;
     }
 
@@ -76,16 +58,17 @@ public class Sticker {
     }
 
     /**
-     * 获取手指的旋转角度
-     *
-     * @param event
-     * @return
+     * 获取图片中心点
      */
-    float getSpaceRotation(MotionEvent event, PointF imageMidPoint) {
-        double deltaX = event.getX(0) - imageMidPoint.x;
-        double deltaY = event.getY(0) - imageMidPoint.y;
-        double radians = Math.atan2(deltaY, deltaX);
-        return (float) Math.toDegrees(radians);
+    PointF getImageMidPoint(Matrix matrix) {
+        PointF point = new PointF();
+        float[] points = PointUtils.getBitmapPoints(srcImage, matrix);
+        float x1 = points[0];
+        float x2 = points[2];
+        float y2 = points[3];
+        float y4 = points[7];
+        point.set((x1 + x2) / 2, (y2 + y4) / 2);
+        return point;
     }
 
     /**

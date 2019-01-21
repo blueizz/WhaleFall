@@ -4,6 +4,5 @@
     <application>
         <activity android:name=".StickerViewActivity" />
         <activity android:name=".PreviewActivity" />
-        <activity android:name=".StickerSelectorListActivity" />
     </application>
 </manifest>

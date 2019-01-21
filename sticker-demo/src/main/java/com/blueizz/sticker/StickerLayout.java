@@ -14,10 +14,6 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public class StickerLayout extends FrameLayout {
 
     private Context context;
@@ -28,8 +24,6 @@ public class StickerLayout extends FrameLayout {
     // 背景图片控件
     private ImageView ivImage;
 
-    // 旋转操作图片
-    private int rotateRes;
     // 缩放操作图片
     private int zoomRes;
     // 缩放操作图片
@@ -173,7 +167,6 @@ public class StickerLayout extends FrameLayout {
             StickerView item = stickerViews.get(i);
             if (item == null) continue;
             item.setZoomRes(zoomRes);
-            item.setRotateRes(rotateRes);
             item.setRemoveRes(removeRes);
             if (i == size - 1) {
                 item.setEdit(isNotGenerate);
@@ -195,10 +188,6 @@ public class StickerLayout extends FrameLayout {
         Canvas canvas = new Canvas(dst);
         draw(canvas);
         return dst;
-    }
-
-    public void setRotateRes(int rotateRes) {
-        this.rotateRes = rotateRes;
     }
 
     public void setZoomRes(int zoomRes) {

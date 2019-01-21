@@ -19,10 +19,6 @@ import android.view.View;
 
 import com.blueizz.sticker.utils.PointUtils;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public class StickerView extends AppCompatImageView {
 
     private Context context;
@@ -34,12 +30,8 @@ public class StickerView extends AppCompatImageView {
     private Matrix moveMatrix = new Matrix();
     // 多点触屏时的中心点
     private PointF midPoint = new PointF();
-    // 图片的中心点坐标
-    private PointF imageMidPoint = new PointF();
     //图片左上角坐标
     private PointF imageOrgPoint = new PointF();
-    // 旋转操作图片
-    private StickerActionIcon rotateIcon;
     // 缩放操作图片
     private StickerActionIcon zoomIcon;
     // 缩放操作图片
@@ -74,7 +66,6 @@ public class StickerView extends AppCompatImageView {
     private void init(Context context) {
         this.context = context;
         setScaleType(ScaleType.MATRIX);
-        rotateIcon = new StickerActionIcon(context);
         zoomIcon = new StickerActionIcon(context);
         removeIcon = new StickerActionIcon(context);
         paintEdge = new Paint();
@@ -113,7 +104,6 @@ public class StickerView extends AppCompatImageView {
             //            canvas.drawLine(x4, y4, x3, y3, paintEdge);
             //            canvas.drawLine(x3, y3, x1, y1, paintEdge);
             // 画操作按钮图片
-            rotateIcon.draw(canvas, x1, y1);
             removeIcon.draw(canvas, x2, y2);
             zoomIcon.draw(canvas, x4, y4);
         }
@@ -125,8 +115,6 @@ public class StickerView extends AppCompatImageView {
     private float downY;
     // 手指之间的初始距离
     private float oldDistance;
-    // 手指之间的初始角度
-    private float oldRotation;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -143,20 +131,11 @@ public class StickerView extends AppCompatImageView {
                         listener.onDelete();
                     }
                 }
-                // 旋转手势验证
-                else if (rotateIcon.isInActionCheck(event)) {
-                    mode = ActionMode.ROTATE;
-                    downMatrix.set(sticker.getMatrix());
-                    imageMidPoint = sticker.getImageMidPoint(downMatrix);
-                    oldRotation = sticker.getSpaceRotation(event, imageMidPoint);
-                    Log.d("onTouchEvent", "旋转手势");
-                }
                 // 单点缩放手势验证
                 else if (zoomIcon.isInActionCheck(event)) {
                     mode = ActionMode.ZOOM_SINGLE;
                     downMatrix.set(sticker.getMatrix());
                     imageOrgPoint = sticker.getImageOrgPoint(downMatrix);
-                    imageMidPoint = sticker.getImageMidPoint(downMatrix);
                     oldDistance = sticker.getSingleTouchDistance(event, imageOrgPoint);
                     Log.d("onTouchEvent", "单点缩放手势");
                 }
@@ -176,16 +155,8 @@ public class StickerView extends AppCompatImageView {
                 downMatrix.set(sticker.getMatrix());
                 break;
             case MotionEvent.ACTION_MOVE:
-                // 单点旋转
-                if (mode == ActionMode.ROTATE) {
-                    moveMatrix.set(downMatrix);
-                    float deltaRotation = sticker.getSpaceRotation(event, imageMidPoint) - oldRotation;
-                    moveMatrix.postRotate(deltaRotation, imageMidPoint.x, imageMidPoint.y);
-                    sticker.getMatrix().set(moveMatrix);
-                    invalidate();
-                }
                 // 单点缩放
-                else if (mode == ActionMode.ZOOM_SINGLE) {
+                if (mode == ActionMode.ZOOM_SINGLE) {
                     moveMatrix.set(downMatrix);
                     float scale = sticker.getSingleTouchDistance(event, imageOrgPoint) / oldDistance;
                     moveMatrix.postScale(scale, scale, imageOrgPoint.x, imageOrgPoint.y);
@@ -212,7 +183,6 @@ public class StickerView extends AppCompatImageView {
             case MotionEvent.ACTION_UP:
                 mode = ActionMode.NONE;
                 midPoint = null;
-                imageMidPoint = null;
                 imageOrgPoint = null;
                 break;
             default:
@@ -268,15 +238,6 @@ public class StickerView extends AppCompatImageView {
     public void setEdit(boolean edit) {
         isEdit = edit;
         postInvalidate();
-    }
-
-    /**
-     * 设置旋转操作的图片
-     *
-     * @param rotateRes
-     */
-    public void setRotateRes(int rotateRes) {
-        rotateIcon.setSrcIcon(rotateRes);
     }
 
     /**

@@ -1,9 +1,5 @@
 package com.blueizz.sticker;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public interface OnStickerActionListener {
 
     /*删除贴纸*/

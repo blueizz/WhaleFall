@@ -7,10 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public class StickerActionIcon {
 
     private Context context;

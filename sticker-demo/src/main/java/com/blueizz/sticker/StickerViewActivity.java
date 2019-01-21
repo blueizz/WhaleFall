@@ -18,10 +18,6 @@ import com.blueizz.sticker.utils.FileUtils;
 
 import java.io.File;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/8/25.
- */
 public class StickerViewActivity extends Activity implements View.OnClickListener {
 
     // 贴纸布局控件
@@ -41,15 +37,12 @@ public class StickerViewActivity extends Activity implements View.OnClickListene
         stickerLayout.setBackgroundImage(R.drawable.bg_scene);
         stickerLayout.setZoomRes(R.drawable.ic_resize);
         stickerLayout.setRemoveRes(R.drawable.ic_remove);
-        stickerLayout.setRotateRes(R.drawable.ic_rotate);
 
         findViewById(R.id.tv_add_sticker).setOnClickListener(this);
         findViewById(R.id.tv_generate_preview).setOnClickListener(this);
         findViewById(R.id.tv_get_preview).setOnClickListener(this);
 
-        /**
-         *模拟anr
-         */
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.blueizz.ANRReceiver");
         mAnrReceiver = new ANRReceiver();
@@ -65,6 +58,9 @@ public class StickerViewActivity extends Activity implements View.OnClickListene
         });
     }
 
+    /**
+     * 模拟ANR
+     */
     public class ANRReceiver extends BroadcastReceiver {
         private static final String TAG = "ANRReceiver";
 
@@ -87,8 +83,7 @@ public class StickerViewActivity extends Activity implements View.OnClickListene
         if (v.getId() == R.id.tv_get_preview) {
             stickerLayout.getPreview();
         } else if (v.getId() == R.id.tv_add_sticker) {
-            Intent intent = new Intent(this, StickerSelectorListActivity.class);
-            startActivityForResult(intent, 200);
+            stickerLayout.addSticker(R.drawable.sticker_add);
         } else if (v.getId() == R.id.tv_generate_preview) {
             Bitmap dstBitmap = stickerLayout.generateCombinedBitmap();
             task = new CompressTask(dstBitmap);
@@ -141,15 +136,6 @@ public class StickerViewActivity extends Activity implements View.OnClickListene
             return true;
         }
     });
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && resultCode == RESULT_OK && requestCode == 200) {
-            int resource = data.getIntExtra("res", 0);
-            stickerLayout.addSticker(resource);
-        }
-    }
 
     @Override
     protected void onDestroy() {

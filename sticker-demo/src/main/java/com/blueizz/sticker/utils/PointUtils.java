@@ -3,10 +3,6 @@ package com.blueizz.sticker.utils;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 
-/**
- * 作者：ZhouYou
- * 日期：2016/12/2.
- */
 public class PointUtils {
 
     /**
