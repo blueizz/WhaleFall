@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
 public class LayerDrawableActivity extends Activity {
@@ -46,6 +47,8 @@ public class LayerDrawableActivity extends Activity {
     private float markY;//标记当前的y坐标
     private int markWidth;
     private int markHeight;
+
+    private Disposable mDisposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,10 +113,8 @@ public class LayerDrawableActivity extends Activity {
         mCanvas = new Canvas(mapBitmap);
         mCanvas.drawBitmap(getBitmapByDrawable(R.drawable.west_lake), 0, 0, new Paint());
         //        mLayerImage.invalidateDrawable(mLayer);
-        /**
-         * Todo:存在内存泄漏
-         */
-        Observable.interval(0, 3000, TimeUnit.MILLISECONDS)
+
+        mDisposable = Observable.interval(0, 3000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Long>() {
                     @Override
@@ -182,6 +183,10 @@ public class LayerDrawableActivity extends Activity {
         if (mAnimator != null) {
             mAnimator.cancel();
             mAnimator = null;
+        }
+        if (mDisposable != null && !mDisposable.isDisposed()) {
+            mDisposable.dispose();
+            mDisposable = null;
         }
         super.onDestroy();
     }
