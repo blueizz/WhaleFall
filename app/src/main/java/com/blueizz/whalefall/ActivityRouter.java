@@ -32,7 +32,7 @@ public class ActivityRouter {
             activityMap.put("注解", annotationClass);
         }
         activityMap.put("Bitmap描边", StrokeActivity.class);
-        activityMap.put("位图转矢量图", BitmapActivity.class);
+        activityMap.put("单图层绘制", BitmapActivity.class);
         activityMap.put("多图层绘制", LayerDrawableActivity.class);
         activityMap.put("集合框架", CollectionActivity.class);
         activityMap.put("Android贴纸", StickerViewActivity.class);
