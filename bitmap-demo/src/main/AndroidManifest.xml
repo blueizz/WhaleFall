@@ -5,7 +5,7 @@
 
     <application>
         <activity android:name=".StrokeActivity" />
-        <activity android:name=".antrace.AntraceActivity" />
+        <activity android:name=".BitmapActivity" />
         <activity android:name=".LayerDrawableActivity" />
     </application>
 </manifest>

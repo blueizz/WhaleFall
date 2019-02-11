@@ -14,10 +14,10 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        ndk {
-            moduleName "bitmap-demo"
-            ldLibs = ["android", "jnigraphics", "log"]
-        }
+//        ndk {
+//            moduleName "bitmap-demo"
+//            ldLibs = ["android", "jnigraphics", "log"]
+//        }
 
     }
 
@@ -28,11 +28,11 @@ android {
         }
     }
 
-    externalNativeBuild {
-        ndkBuild {
-            path 'src/main/jni/Android.mk'
-        }
-    }
+//    externalNativeBuild {
+//        ndkBuild {
+//            path 'src/main/jni/Android.mk'
+//        }
+//    }
 
 }
 

@@ -4,18 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.blueizz.sticker.utils.PointUtils;
 
@@ -28,16 +23,12 @@ public class StickerView extends AppCompatImageView {
     private Matrix downMatrix = new Matrix();
     // 手指移动时图片的矩阵
     private Matrix moveMatrix = new Matrix();
-    // 多点触屏时的中心点
-    private PointF midPoint = new PointF();
     //图片左上角坐标
     private PointF imageOrgPoint = new PointF();
     // 缩放操作图片
     private StickerActionIcon zoomIcon;
     // 缩放操作图片
     private StickerActionIcon removeIcon;
-    // 绘制图片的边框
-    private Paint paintEdge;
 
     // 触控模式
     private int mode;
@@ -68,19 +59,14 @@ public class StickerView extends AppCompatImageView {
         setScaleType(ScaleType.MATRIX);
         zoomIcon = new StickerActionIcon(context);
         removeIcon = new StickerActionIcon(context);
-        paintEdge = new Paint();
-        paintEdge.setColor(Color.WHITE);
-        paintEdge.setStrokeWidth(3);
-        paintEdge.setAntiAlias(true);
-        paintEdge.setPathEffect(new DashPathEffect(new float[]{20f, 10f}, 0));
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
-            sticker.getMatrix().postTranslate((getWidth() - sticker.getStickerWidth()) / 2, (getHeight() - sticker.getStickerHeight()) / 2);
+            sticker.getMatrix().postTranslate((getWidth() - sticker.getStickerWidth()) / 2,
+                    (getHeight() - sticker.getStickerHeight()) / 2);
         }
     }
 
@@ -118,7 +104,7 @@ public class StickerView extends AppCompatImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int action = MotionEventCompat.getActionMasked(event);
+        int action = event.getActionMasked();
         boolean isStickerOnEdit = true;
         switch (action) {
             case MotionEvent.ACTION_DOWN:
@@ -131,13 +117,13 @@ public class StickerView extends AppCompatImageView {
                         listener.onDelete();
                     }
                 }
-                // 单点缩放手势验证
+                // 缩放手势验证
                 else if (zoomIcon.isInActionCheck(event)) {
-                    mode = ActionMode.ZOOM_SINGLE;
+                    mode = ActionMode.ZOOM;
                     downMatrix.set(sticker.getMatrix());
                     imageOrgPoint = sticker.getImageOrgPoint(downMatrix);
                     oldDistance = sticker.getSingleTouchDistance(event, imageOrgPoint);
-                    Log.d("onTouchEvent", "单点缩放手势");
+                    Log.d("onTouchEvent", "缩放手势");
                 }
                 // 平移手势验证
                 else if (isInStickerArea(sticker, event)) {
@@ -148,26 +134,12 @@ public class StickerView extends AppCompatImageView {
                     isStickerOnEdit = false;
                 }
                 break;
-            case MotionEvent.ACTION_POINTER_DOWN: // 多点触控
-                mode = ActionMode.ZOOM_MULTI;
-                oldDistance = sticker.getMultiTouchDistance(event);
-                midPoint = sticker.getMidPoint(event);
-                downMatrix.set(sticker.getMatrix());
-                break;
             case MotionEvent.ACTION_MOVE:
-                // 单点缩放
-                if (mode == ActionMode.ZOOM_SINGLE) {
+                // 缩放
+                if (mode == ActionMode.ZOOM) {
                     moveMatrix.set(downMatrix);
                     float scale = sticker.getSingleTouchDistance(event, imageOrgPoint) / oldDistance;
                     moveMatrix.postScale(scale, scale, imageOrgPoint.x, imageOrgPoint.y);
-                    sticker.getMatrix().set(moveMatrix);
-                    invalidate();
-                }
-                // 多点缩放
-                else if (mode == ActionMode.ZOOM_MULTI) {
-                    moveMatrix.set(downMatrix);
-                    float scale = sticker.getMultiTouchDistance(event) / oldDistance;
-                    moveMatrix.postScale(scale, scale, midPoint.x, midPoint.y);
                     sticker.getMatrix().set(moveMatrix);
                     invalidate();
                 }
@@ -182,7 +154,6 @@ public class StickerView extends AppCompatImageView {
             case MotionEvent.ACTION_POINTER_UP:
             case MotionEvent.ACTION_UP:
                 mode = ActionMode.NONE;
-                midPoint = null;
                 imageOrgPoint = null;
                 break;
             default:

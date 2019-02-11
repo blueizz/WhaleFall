@@ -1,4 +1,4 @@
-package com.blueizz.bitmap.antrace;
+package com.blueizz.bitmap;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -10,6 +10,9 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +22,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.blueizz.bitmap.R;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.io.File;
@@ -28,11 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-public class AntraceActivity extends Activity {
+public class BitmapActivity extends Activity {
     private static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 101;
 
     private PhotoView mPointImage;
@@ -41,16 +39,17 @@ public class AntraceActivity extends Activity {
     private Bitmap mPointMap;
     private int radius = 2;
 
-    private Bitmap mThresholdMap;
-
     private Canvas mCanvas;
     private Paint mPaint;
+
+    private HandlerThread thread;
+    private Handler threadHandler;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_antrace);
+        setContentView(R.layout.activity_bitmap);
 
         initView();
     }
@@ -60,30 +59,23 @@ public class AntraceActivity extends Activity {
         mTracer = findViewById(R.id.btn_tracer);
 
         mPointMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
-        mThresholdMap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888);
 
         drawPoints(getData());
+
+        thread = new HandlerThread("Thread Handler");
+        thread.start();
+        threadHandler = new Handler(thread.getLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Toast.makeText(BitmapActivity.this, Thread.currentThread().getName(), Toast.LENGTH_SHORT).show();
+            }
+        };
 
         mTracer.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("CheckResult")
             @Override
             public void onClick(View v) {
-                Observable.just(0)
-                        .observeOn(Schedulers.newThread())
-                        .doOnNext(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) {
-                                Utils.threshold(mPointMap, 127, mThresholdMap);
-                            }
-                        })
-                        .subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) {
-                                Utils.traceImage(mThresholdMap);
-                                String svgFile = tempSvgFile();
-                                Utils.saveSVG(svgFile, mThresholdMap.getWidth(), mThresholdMap.getHeight());
-                            }
-                        });
 
                 /**
                  * RxJava将第一个操作的返回值传递给下一个操作
@@ -96,9 +88,11 @@ public class AntraceActivity extends Activity {
                 //                }).subscribe(new Consumer<String>() {
                 //                    @Override
                 //                    public void accept(String s) {
-                //                        Toast.makeText(AntraceActivity.this, s, Toast.LENGTH_SHORT).show();
+                //                        Toast.makeText(BitmapActivity.this, s, Toast.LENGTH_SHORT).show();
                 //                    }
                 //                });
+                threadHandler.sendEmptyMessage(0);
+
             }
         });
     }
@@ -116,14 +110,6 @@ public class AntraceActivity extends Activity {
             mCanvas.drawPoint(cx, cy, mPaint);
         }
 
-        //        SvgPathParser parser = new SvgPathParser();
-        //        try {
-        //            android.graphics.Path path = parser.parsePath(getString(R.string.map));
-        //            paint.setColor(Color.RED);
-        //            canvas.drawPath(path, paint);
-        //        } catch (Exception e) {
-        //        }
-
         saveBitmap(mPointMap);
 
         mPointImage.setImageBitmap(mPointMap);
@@ -134,17 +120,6 @@ public class AntraceActivity extends Activity {
         String jsonData = getString(R.string.point_data);
         List<PointF> data = JSON.parseArray(jsonData, PointF.class);
         return data;
-    }
-
-
-    /**
-     * SVG缓存路径
-     * /Android/data/com.blueizz.whalefall/cache/temp_svg.svg
-     *
-     * @return
-     */
-    public String tempSvgFile() {
-        return this.getExternalCacheDir().toString() + "/temp_svg.svg";
     }
 
     /**
@@ -187,14 +162,14 @@ public class AntraceActivity extends Activity {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (ContextCompat.checkSelfPermission(AntraceActivity.this,
+        if (ContextCompat.checkSelfPermission(BitmapActivity.this,
                 permission) != PackageManager.PERMISSION_GRANTED) {
             //如果应用之前请求过此权限但用户拒绝了请求，此方法将返回 true
-            if (ActivityCompat.shouldShowRequestPermissionRationale(AntraceActivity.this,
+            if (ActivityCompat.shouldShowRequestPermissionRationale(BitmapActivity.this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                Toast.makeText(AntraceActivity.this, tip, Toast.LENGTH_LONG).show();
+                Toast.makeText(BitmapActivity.this, tip, Toast.LENGTH_LONG).show();
             } else {
-                ActivityCompat.requestPermissions(AntraceActivity.this,
+                ActivityCompat.requestPermissions(BitmapActivity.this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
             }
             return false;
@@ -210,11 +185,16 @@ public class AntraceActivity extends Activity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     saveBitmap(mPointMap);
                 } else {
-                    Toast.makeText(AntraceActivity.this, String.format(
+                    Toast.makeText(BitmapActivity.this, String.format(
                             getString(R.string.storage_failure), "鲸落"), Toast.LENGTH_LONG).show();
                 }
                 break;
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        thread.quit();
+    }
 }
