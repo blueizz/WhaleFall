@@ -7,6 +7,7 @@ import com.blueizz.bitmap.StrokeActivity;
 import com.blueizz.collection.CollectionActivity;
 import com.blueizz.bitmap.BitmapActivity;
 import com.blueizz.reflection.ReflectionActivity;
+import com.blueizz.service.ServiceActivity;
 import com.blueizz.sticker.StickerViewActivity;
 
 import org.joor.Reflect;
@@ -36,6 +37,7 @@ public class ActivityRouter {
         activityMap.put("多图层绘制", LayerDrawableActivity.class);
         activityMap.put("集合框架", CollectionActivity.class);
         activityMap.put("Android贴纸", StickerViewActivity.class);
+        activityMap.put("Service基本用法", ServiceActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {

@@ -2,15 +2,12 @@ package com.blueizz.whalefall.model;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 
 import com.blueizz.commom.mvp.SafeHandler;
 import com.blueizz.commom.mvp.model.BaseModel;
 import com.blueizz.whalefall.ActivityRouter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

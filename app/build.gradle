@@ -37,4 +37,5 @@ dependencies {
     implementation project(':bitmap-demo')
     implementation project(':collection-demo')
     implementation project(':sticker-demo')
+    implementation project(':service_demo')
 }

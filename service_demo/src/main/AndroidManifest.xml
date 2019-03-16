@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.blueizz.service">
+
+    <application>
+        <activity android:name=".ServiceActivity" />
+
+        <service android:name=".TestService" />
+        <service android:name=".FrontService" />
+    </application>
+</manifest>
