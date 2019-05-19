@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.blueizz.thread">
+
+    <application>
+        <activity android:name=".ThreadActivity" />
+        <service android:name=".TestIntentService" />
+    </application>
+</manifest>

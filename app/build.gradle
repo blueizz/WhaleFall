@@ -32,10 +32,13 @@ dependencies {
     implementation 'org.jooq:joor-java-8:0.9.7'
 
     implementation project(':common')
-    implementation project(':reflection-demo')
-    implementation project(':annotation-demo')
-    implementation project(':bitmap-demo')
-    implementation project(':collection-demo')
-    implementation project(':sticker-demo')
+    implementation project(':reflection_demo')
+    implementation project(':annotation_demo')
+    implementation project(':bitmap_demo')
+    implementation project(':collection_demo')
+    implementation project(':sticker_demo')
     implementation project(':service_demo')
+    implementation project(':view_demo')
+    implementation project(':animation_demo')
+    implementation project(':thread_demo')
 }

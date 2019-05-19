@@ -1,8 +1,16 @@
 <resources>
 
+    <style name="Animation_Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/enter_anim_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/exit_anim_left</item>
+        <item name="android:activityCloseEnterAnimation">@anim/enter_anim_left</item>
+        <item name="android:activityCloseExitAnimation">@anim/exit_anim_right</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="android:windowAnimationStyle">@style/Animation_Activity</item>
     </style>
 
 </resources>
