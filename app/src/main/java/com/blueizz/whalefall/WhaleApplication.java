@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 
 import com.blueizz.whalefall.activity.MainActivity;
+import com.mob.MobSDK;
 import com.squareup.leakcanary.LeakCanary;
 
 public class WhaleApplication extends Application {
@@ -22,6 +23,7 @@ public class WhaleApplication extends Application {
             return;
         }
         LeakCanary.install(this);
+        MobSDK.init(this);
 
         Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
     }

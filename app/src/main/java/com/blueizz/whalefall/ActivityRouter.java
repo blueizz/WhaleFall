@@ -9,6 +9,7 @@ import com.blueizz.collection.CollectionActivity;
 import com.blueizz.bitmap.BitmapActivity;
 import com.blueizz.reflection.ReflectionActivity;
 import com.blueizz.service.ServiceActivity;
+import com.blueizz.share_demo.ShareActivity;
 import com.blueizz.sticker.StickerViewActivity;
 import com.blueizz.thread.ThreadActivity;
 import com.blueizz.view.ViewActivity;
@@ -44,6 +45,7 @@ public class ActivityRouter {
         activityMap.put("View的原理", ViewActivity.class);
         activityMap.put("动画", AnimationActivity.class);
         activityMap.put("线程", ThreadActivity.class);
+        activityMap.put("分享", ShareActivity.class);
     }
 
     public static Map<String, Class<? extends Activity>> getActivityMap() {

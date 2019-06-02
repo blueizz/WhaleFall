@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
 android {
     compileSdkVersion 26
@@ -41,4 +42,5 @@ dependencies {
     implementation project(':view_demo')
     implementation project(':animation_demo')
     implementation project(':thread_demo')
+    implementation project(':share_demo')
 }
